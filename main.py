@@ -17,6 +17,30 @@ client = commands.Bot(command_prefix="&", intents=intents)
 # sets up a global variable for curse loop
 cursing = False
 
+# a function that sends handles the joining and playing of the bot taking in the arguments of the command and minimum time and maximum time for it to wait between "bruhs"
+async def curseBase(ctx, user, minTime, maxTime):
+
+    global cursing
+    cursing = True
+    await ctx.send("***UWU?*** ")
+    mark = ctx.guild.get_member(user.id)
+
+    while cursing:
+
+        waitTime = random.randint(minTime, maxTime)
+        print(waitTime)
+        await asyncio.sleep(waitTime)
+
+        if (mark.voice != None and cursing):
+
+            await mark.voice.channel.connect()
+            print("Connected to voicechat!")
+            voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
+            voice.play(discord.FFmpegPCMAudio("bruh.mp3"))
+            await asyncio.sleep(3)
+            await voice.disconnect()
+
+
 # when the bot runs it prints a message that is has gone online in the command prompt
 @client.event
 async def on_ready():
@@ -74,26 +98,7 @@ async def forceLeave(ctx):
 )
 async def curse(ctx, user: discord.User):
 
-    global cursing
-    cursing = True
-    await ctx.send("***UWU?*** ")
-    mark = ctx.guild.get_member(user.id)
-
-    while cursing:
-
-            waitTime = random.randint(5,900)
-            print(waitTime)
-            await asyncio.sleep(waitTime)
-
-            if (mark.voice != None and cursing):
-                await mark.voice.channel.connect()
-                print("Connected to voicechat!")
-                voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-                voice.play(discord.FFmpegPCMAudio("bruh.mp3"))
-                await asyncio.sleep(3)
-                await voice.disconnect()
-
-
+    await curseBase(ctx, user, 5, 900)
 
 # a command similiar to curse with a much lower delay between individual joins: mainly used for debugging and testing
 # however could still be used if you are feeling particularly cruel that day
@@ -105,25 +110,7 @@ async def curse(ctx, user: discord.User):
 @commands.is_owner()
 async def curseEvil(ctx, user: discord.User):
 
-    global cursing
-    cursing = True
-    await ctx.send("***UWU?*** ")
-    mark = ctx.guild.get_member(user.id)
-
-    while cursing:
-
-        waitTime = random.randint(5, 15)
-        print(waitTime)
-        await asyncio.sleep(waitTime)
-
-        if (mark.voice != None and cursing):
-            await mark.voice.channel.connect()
-            print("Connected to voicechat!")
-            voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-            voice.play(discord.FFmpegPCMAudio("bruh.mp3"))
-            await asyncio.sleep(3)
-            await voice.disconnect()
-
+    await curseBase(ctx, user, 5, 15)
 
 # this command turns off the while loop of the curse command; made it admin only for added chaos
 @client.command(
